@@ -6,6 +6,7 @@ gem 'sinatra-contrib'
 gem 'json'
 gem 'elasticsearch'
 gem 'redis'
+gem 'grape'
 
 group :development do
   gem 'shotgun'

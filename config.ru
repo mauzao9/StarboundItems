@@ -1,2 +1,2 @@
-require './starbound.rb'
-run Sinatra::Application
+require './app.rb'
+run Rack::Cascade.new [API, Web]
