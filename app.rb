@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/content_for'
 require 'grape'
 require 'elasticsearch'
 require 'redis'
@@ -98,6 +99,8 @@ class API < Grape::API
 end
 
 class Web < Sinatra::Base
+  helpers Sinatra::ContentFor
+
   get '/' do
     erb :index
   end

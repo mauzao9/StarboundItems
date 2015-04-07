@@ -1,2 +1,3 @@
 find_items
 .env
+.rbenv-vars
