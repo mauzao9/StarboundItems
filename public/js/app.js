@@ -62,3 +62,22 @@ App.ItemController = Ember.ObjectController.extend({
     return this.get('rarity') && this.get('rarity').toLowerCase();
   }.property('rarity')
 });
+
+App.StatsRoute = Ember.Route.extend({
+  model: function (params) {
+    return Ember.$.getJSON('/api/stats');
+  }
+});
+
+App.StatsController = Ember.ObjectController.extend({
+  searchTerms: function () {
+    var terms = this.get('search_terms');
+
+    if (terms.length > 0) {
+      // Note: the server performs the sort, so the first item will be the top score.
+      terms[0].isTop = true;
+    }
+
+    return terms;
+  }.property('model.search_terms')
+});
