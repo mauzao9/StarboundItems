@@ -3,21 +3,28 @@ var App = Ember.Application.create({
 });
 
 App.Router.map(function () {
-  this.route('all');
-  this.route('search', function () {
-    this.route('results', { path: ':criteria' });
+  this.resource('items', function () {
+    this.route('all');
+    this.route('search', function () {
+      this.route('results', { path: ':criteria' });
+    })
   });
-  this.route('stats');
+
+  this.resource('stats');
 });
 
-// redirect from '/' to '/search' route.
+// redirect from '/' to '/items/search' route.
 App.IndexRoute = Ember.Route.extend({
   beforeModel: function () {
-    this.transitionTo('search');
+    this.transitionTo('items.search');
   }
 });
 
-App.SearchController = Ember.Controller.extend({
+App.ItemTableComponent = Ember.Component.extend({
+
+});
+
+App.ItemsSearchController = Ember.Controller.extend({
   searchText: '',
 
   onSearchTextChange: function () {
@@ -29,24 +36,24 @@ App.SearchController = Ember.Controller.extend({
 
   actions: {
     updateSearch: function (searchText) {
-      this.transitionToRoute('search.results', searchText);
+      this.transitionToRoute('items.search.results', searchText);
     },
   }
 });
 
-App.SearchResultsRoute = Ember.Route.extend({
+App.ItemsSearchResultsRoute = Ember.Route.extend({
   model: function (params) {
     var minimumLength = 2;
 
     if (params.criteria && params.criteria.length >= minimumLength) {
       return Ember.$.getJSON('/api/search?query=' + params.criteria);
     } else {
-      this.transitionTo('search');
+      this.transitionTo('items.search');
     }
   }
 });
 
-App.SearchResultsController = Ember.ArrayController.extend({
+App.ItemsSearchResultsController = Ember.ArrayController.extend({
   resultCount: Ember.computed.alias('length')
 });
 
@@ -80,4 +87,15 @@ App.StatsController = Ember.ObjectController.extend({
 
     return terms;
   }.property('model.search_terms')
+});
+
+App.ItemsAllRoute = Ember.Route.extend({
+  model: function (params){
+    return Ember.$.getJSON('/api/items?page=' + params.page);
+  }
+});
+
+App.ItemsAllController = Ember.ArrayController.extend({
+  queryParams: ['page'],
+  page: 1
 });

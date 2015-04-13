@@ -18,8 +18,9 @@
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="/all">All Items</a></li>
-                <li><a href="/stats">Stats</a></li>
+                <li>{{#link-to 'items.search'}}Search{{/link-to}}</li>
+                <li>{{#link-to 'items.all'}}All Items{{/link-to}}</li>
+                <li>{{#link-to 'stats'}}Stats{{/link-to}}</li>
                 <li><a href="https://github.com/MarceloAlves/StarboundItems"><i class="fa fa-github fa-2x"></i></a></li>
               </ul>
             </div>
@@ -32,7 +33,7 @@
       {{partial "footer"}}
     </script>
 
-    <script type='text/x-handlebars' data-template-name='search'>
+    <script type='text/x-handlebars' data-template-name='items/search'>
       <div class="well well-sm">
         <div class="col-md-12">
           {{input type="text" class="form-control input-lg" value=searchText placeholder="Start Typing... (Examples: dirtmaterial, tomatojuice, sandstonetorch)"}}
@@ -42,7 +43,17 @@
       {{outlet}}
     </script>
 
-    <script type='text/x-handlebars' data-template-name='search/results'>
+    <script type='text/x-handlebars' data-template-name='items/search/results'>
+      <p>{{resultCount}} results:</p>
+      {{item-table items=arrangedContent}}
+    </script>
+
+    <script type='text/x-handlebars' data-template-name='items/all'>
+      {{item-table items=arrangedContent}}
+      <div class="well"><h3>TODO: Implement pagination</h3></div>
+    </script>
+
+    <script type='text/x-handlebars' data-template-name='components/item-table'>
       <table class="table table-striped table-bordered">
         <thead>
           <th>Icon</th>
@@ -53,7 +64,7 @@
           <th>Type</th>
         </thead>
         <tbody>
-          {{#each item in arrangedContent itemController='item'}}
+          {{#each item in items itemController='item'}}
             <tr>
               <td>{{#if item.inventoryIcon}}<img {{bind-attr src='item.iconUrl'}} height="20">{{/if}}</td>
               <td>{{item.itemName}}</td>
@@ -64,7 +75,7 @@
             </tr>
           {{else}}
             <tr>
-              <td colspan='6'>Nothing found. Please try another search.</td>
+              <td colspan='6'>There are no items.</td>
             </tr>
           {{/each}}
         </tbody>
